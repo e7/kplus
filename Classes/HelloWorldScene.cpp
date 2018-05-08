@@ -81,25 +81,55 @@ bool HelloWorld::init()
     auto sc = SpriteFrameCache::getInstance();
 	
 	sc->addSpriteFramesWithFile("iori/stand.plist");
-	auto sprite2 = Sprite::createWithSpriteFrameName("stand_1.png");
+	sc->addSpriteFramesWithFile("iori/run.plist");
+	auto sprite1 = Sprite::createWithSpriteFrameName("stand_1.png");
+	auto sprite2 = Sprite::createWithSpriteFrameName("run_1.png");
 
-	sprite2->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
+	sprite1->setPosition(Vec2(visibleSize.width * 0.25f + origin.x, visibleSize.height / 4 + origin.y));
+	this->addChild(sprite1, 0);
+	sprite2->setPosition(Vec2(visibleSize.width * 0.75f + origin.x, visibleSize.height / 4 + origin.y));
 	this->addChild(sprite2, 0);
-	
-	cocos2d::Vector<cocos2d::SpriteFrame *> allFrames(10);
+
+	cocos2d::Vector<cocos2d::SpriteFrame *> allFrames1(10);
 	for (int i = 1; i < 9; ++i) {
 		char name[32] = { 0 };
 		snprintf(name, 32, "stand_%d.png", i + 1);
 		auto frameName = sc->getSpriteFrameByName(name);
-		allFrames.pushBack(frameName);
+		allFrames1.pushBack(frameName);
 	}
 
-	auto animation = Animation::createWithSpriteFrames(allFrames);
-	animation->setDelayPerUnit(0.10f);
-	animation->setLoops(-1);
-	animation->setRestoreOriginalFrame(true);
-	auto animate = Animate::create(animation);
-	sprite2->runAction(animate);
+	log("add keyboard event listener");
+	auto listener = EventListenerKeyboard::create();
+	listener->onKeyPressed = [](EventKeyboard::KeyCode kc, Event *ev) {
+		log("keypress:%d", kc);
+	};
+	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
+
+	auto animation1 = Animation::createWithSpriteFrames(allFrames1);
+	animation1->setDelayPerUnit(0.10f);
+	animation1->setLoops(-1);
+	animation1->setRestoreOriginalFrame(true);
+	auto animate1 = Animate::create(animation1);
+	//sprite1->setScale(1.8f);
+	sprite1->setScale(0.5f);
+	sprite1->runAction(animate1);
+	
+	cocos2d::Vector<cocos2d::SpriteFrame *> allFrames2(10);
+	for (int i = 1; i < 8; ++i) {
+		char name[32] = { 0 };
+		snprintf(name, 32, "run_%d.png", i + 1);
+		auto frameName = sc->getSpriteFrameByName(name);
+		allFrames2.pushBack(frameName);
+	}
+
+	auto animation2 = Animation::createWithSpriteFrames(allFrames2);
+	animation2->setDelayPerUnit(0.10f);
+	animation2->setLoops(-1);
+	animation2->setRestoreOriginalFrame(true);
+	auto animate2 = Animate::create(animation2);
+	//sprite2->setScale(1.8f);
+	sprite2->setScale(0.5f);
+	sprite2->runAction(animate2);
 
     return true;
 }

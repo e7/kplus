@@ -1,6 +1,8 @@
 #include "AppDelegate.h"
 #include "HelloWorldScene.h"
 
+#define USE_WIN32_CONSOLE
+
 // #define USE_AUDIO_ENGINE 1
 // #define USE_SIMPLE_AUDIO_ENGINE 1
 
@@ -25,7 +27,14 @@ static cocos2d::Size mediumResolutionSize = cocos2d::Size(1024, 768);
 static cocos2d::Size largeResolutionSize = cocos2d::Size(2048, 1536);
 
 AppDelegate::AppDelegate()
-{}
+{
+#ifdef USE_WIN32_CONSOLE
+	::AllocConsole();
+	::freopen("CONIN$", "r", stdin);
+	::freopen("CONOUT$", "w", stdout);
+	::freopen("CONOUT$", "w", stderr);
+#endif
+}
 
 AppDelegate::~AppDelegate() 
 {
@@ -33,6 +42,10 @@ AppDelegate::~AppDelegate()
     AudioEngine::end();
 #elif USE_SIMPLE_AUDIO_ENGINE
     SimpleAudioEngine::end();
+#endif
+
+#ifdef USE_WIN32_CONSOLE
+	::FreeConsole();
 #endif
 }
 
