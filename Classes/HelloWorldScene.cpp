@@ -25,6 +25,8 @@ bool HelloWorld::init()
         return false;
     }
 
+    // 添加资源搜索路径
+    FileUtils::getInstance()->addSearchPath("Resources");
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
